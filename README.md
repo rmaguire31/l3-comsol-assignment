@@ -1,2 +1,2 @@
-# l3-comsol-assignment
+# l3-mems-assignment
 University assignment
