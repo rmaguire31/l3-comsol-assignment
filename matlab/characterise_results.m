@@ -13,6 +13,13 @@ Tname = 'Temperature (\si{\celsius})';
 Cname = 'Capacitance (\si{\femto\farad})';
 dzname = 'Displacement (\si{\micro\meter})';
 ctename = 'Coefficient of thermal expansion (\si{\per\kelvin})';
+stressname = '\ce{SiO2} pre-stress (\si\{\giga\pascal})';
+if strcmp(fname, 'material_study.txt')
+    paramname = ctename;
+    paramv = cte(1,:);
+elseif strcmp(fname, 'prestress_study.txt')
+    Tname = stressname;
+end
 
 % Maximum temperature when the value stays the same. Set these to NaN
 C(isnan(dz)) = nan;
@@ -174,9 +181,9 @@ for i = 2:size(data,1)
     end
 end
 paramv = data(1:length(Tv):end,1);
-C = reshape(data(:,3), length(Tv), length(paramv))
-dz = reshape(data(:,4), length(Tv), length(paramv))
-cte = reshape(data(:,5), length(Tv), length(paramv))
+C = reshape(data(:,3), length(Tv), length(paramv));
+dz = reshape(data(:,4), length(Tv), length(paramv));
+cte = reshape(data(:,5), length(Tv), length(paramv));
 end
 
 function plot_tikz(x, y, paramv, xname, yname, paramname, fname, cb)
