@@ -24,7 +24,7 @@ end
 % Maximum temperature when the value stays the same. Set these to NaN
 C(isnan(dz)) = nan;
 for i = 1:length(paramv)
-    j0(i) = find(dz(:,i)==min(dz(:,i)));
+    j0(i) = find(abs(dz(:,i))==min(abs(dz(:,i))));
 end
 plot_tikz(Tv, C, paramv, Tname, Cname, paramname, [fname '.C-T.tex']);
 plot_tikz(Tv, dz, paramv, Tname, dzname, paramname, [fname '.dz-T.tex']);
@@ -32,38 +32,81 @@ plot_tikz(dz, C, paramv, dzname, Cname, paramname, [fname '.C-dz.tex']);
 
 % Get p-values for linearity of C-T. We should be able to identify when
 % the relationship becomes significantly non-linear.
-alpha = 0.05;
-p_CT = zeros(size(C));
-p_dzT = zeros(size(dz));
-p_Cdz = zeros(size(C));
-for i = 1:length(paramv)
-    for j = 1:length(Tv)
-        if isnan(C(j,i))
-            p_CT = nan;
-            p_dzT = nan;
-            p_Cdz = nan;
+    function [p, F, b] = regression(x,y)
+        p = zeros(length(x),length(x),length(paramv));
+        F = zeros(length(x),length(x),length(paramv));
+        b = cell(length(x),length(x),length(paramv));
+        for ii = 1:length(paramv)
+            for jj = 1:length(x)
+                for kk = jj:length(x)
+                    if any(isnan(y(jj:kk,ii)))
+                        p([kk,jj],[jj,kk],ii) = nan;
+                        continue
+                    end
+                    % Perform regression to get p-values out
+                    [beta,~,~,stats] = regress(...
+                          x(jj:kk)', [ones(1+kk-jj,1) y(jj:kk,ii)]);
+                    b([kk,jj],[jj,kk],ii) = {beta};
+                    F([kk,jj],[jj,kk],ii) = stats(end-1);
+                    p([kk,jj],[jj,kk],ii) = stats(end);
+                end
+            end
         end
-        if j < j0(i)
-            x_C = C(j:j0(i),i) - C(j0(i),i);
-            x_dz = dz(j:j0(i),i) - dz(j0(i),i);
-            x_T = Tv(j:j0(i))' - Tv(j0(i));
-        elseif j > j0(i)
-            x_C = C(j0(i):j,i) - C(j0(i),i);
-            x_dz = dz(j0(i):j,i) - dz(j0(i),i);
-            x_T = Tv(j0(i):j)' - Tv(j0(i));
-        else
-            p(j,i) = 0;
-            continue
-        end
-        % Perform regression to get p-value out
-        [~,~,~,~,stats] = regress(x_C, x_T);
-        p_CT(j,i) = stats(end);
-        [~,~,~,~,stats] = regress(x_dz, x_T);
-        p_dzT(j,i) = stats(end);
-        [~,~,~,~,stats] = regress(x_C, x_dz);
-        p_Cdz(j,i) = stats(end);
     end
-end
+[p_CT, F_CT, b_CT] = regression(Tv,C);
+[p_dzT, F_dzT, b_dzT] = regression(Tv,dz);
+
+disp('C-T')
+disp(p_CT)
+disp('dz-T')
+disp(p_dzT)
+
+% Find linear region
+    function lin = linear_region(p)
+        alpha = 0.05;
+        lin = cell(length(paramv),2);
+        for ii = 1:length(paramv)
+            % Default linear region
+            lin(ii,:) = {1, 1, ii};
+            brake = false;
+            for diag = size(p,1)-1:-1:0
+                for jj = 1:size(p,1)-diag
+                    if p(jj,jj+diag,ii) < alpha
+                        lin(ii,:) = {jj, jj+diag, ii};
+                        brake = true;
+                        break
+                    end
+                end
+                if brake
+                    break
+                end
+            end
+        end
+    end
+lin_CT = linear_region(p_CT);
+lin_dzT = linear_region(p_dzT);
+
+disp('C-T')
+disp(lin_CT)
+disp('dz-T')
+disp(lin_dzT)
+
+% Calculate the sensitivity in the linear region using regression
+    function S = sensitivity(lin, b)
+        S = ones(length(paramv),1);
+        for ii = 1:length(paramv)
+            S(ii) = b{lin{ii,:}};
+        end
+    end
+S_CT = sensitivity(lin_CT, b_CT);
+S_dzT = sensitivity(lin_dzT, b_dzT);
+
+disp('C-T')
+disp(S_CT)
+disp('dz-T')
+disp(S_dzT)
+
+return
 plot_tikz(Tv, p_CT, paramv, Tname, 'p for C--T', paramname,...
     [fname '.linearity_C-T.tex'], @plot_alpha_cb);
 plot_tikz(Tv, p_dzT, paramv, Tname, 'p for dz--T', paramname,...
@@ -86,45 +129,7 @@ plot_tikz(dz, p_Cdz, paramv, dzname, 'p for C--dz', paramname,...
     end
 
 % Compute sensitivity (gradient) of linear region
-S_CT = nan(size(paramv));
-S_Cdz = nan(size(paramv));
-S_dzT = nan(size(paramv));
 for i = 1:length(paramv)
-    % C-T sensitivity
-    % Start of linear region
-    j_min = find(p_CT(1:j0(i),i)<alpha, 1, 'first');
-    if isempty(j_min)
-        j_min = 1;
-    end
-    % End of linear region
-    j_max = find(p_CT(j0(i):end,i)<alpha, 1, 'last');
-    if isempty(j_max)
-        j_max = length(Tv);
-    end
-    S_CT(i) = mean(diff(C(j_min:j_max,i))./diff(Tv(j_min:j_max)));
-    
-    % dz-T sensitivity
-    j_min = find(p_dzT(1:j0(i),i)<alpha, 1, 'first');
-    if isempty(j_min)
-        j_min = 1;
-    end
-    j_max = find(p_dzT(j0(i):end,i)<alpha, 1, 'last');
-    if isempty(j_max)
-        j_max = length(Tv);
-    end
-    S_dzT(i) = mean(diff(dz(j_min:j_max,i))./diff(Tv(j_min:j_max)));
-    
-    % C-dz sensitivity
-    j_min = find(p_Cdz(1:j0(i),i)<alpha, 1, 'first');
-    if isempty(j_min)
-        j_min = 1;
-    end
-    % End of linear region
-    j_max = find(p_Cdz(j0(i):end,i)<alpha, 1, 'last');
-    if isempty(j_max)
-        j_max = length(Tv);
-    end
-    S_Cdz(i) = mean(diff(dz(j_min:j_max,i))./diff(dz(j_min:j_max,i)));
 end
 plot_tikz(paramv, S_CT, 'C-T sensitivity', {}, paramname, yname, '',...
     [fname 'sensitivity_C-T.tex']);
