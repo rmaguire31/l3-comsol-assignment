@@ -10,20 +10,27 @@ function analyse_timestep(fname)
 %COPYRIGHT (C) Russell Maguire 2017
 [tv, Tv, dzv] = parse_fname(fname);
 fname = fname(1:end-4);
-tname = 'Time \si{\milli\second}';
+tname = 'Time \si{\second}';
 Tname = 'Temperature \si{\celsius}';
 dzname = 'Displacement \si{\micro\meter}';
 
-tv = tv - 0.1;
-yyaxis('left');
-plot(tv, dzv);
-ylabel(dzname);
-
-yyaxis('right');
-plot(tv, Tv);
-ylabel(Tname);
-
-xlabel(tname);
+tv = tv - 0.05;
+Tv = Tv - 293.15;
+dzc = dzv(1)+(dzv(end)-dzv(1))*exp(-1);
+tc = tv(find(dzv<=dzc, 1));
+disp([tc, dzc])
+plot_tikz(tv, dzv, Tv, tname, dzname, Tname, [fname '.response.tex'],...
+    @plot_tc_cb)
+    function plot_tc_cb()
+        h = ishold();
+        hold('on');
+        ax = gca();
+        plot(ax.XLim, [dzc dzc], '--k');
+        plot([tc tc], ax.YLim, '--k');
+        if ~h
+            hold('off')
+        end
+    end
 end
 
 function [tv, Tv, dzv] = parse_fname(fname)
@@ -64,9 +71,9 @@ disp(header)
 paramname = headings{1};
 
 % Format data vectors
-tv = data(:,1)';
-Tv = data(:,1)';
-dzv = data(:,1)';
+tv = movmean(data(:,1),2);
+Tv = movmean(data(:,2),2);
+dzv = movmean(data(:,3),2);
 end
 
 function plot_tikz(x, y, paramv, xname, yname, paramname, fname, cb)
@@ -76,7 +83,7 @@ function plot_tikz(x, y, paramv, xname, yname, paramname, fname, cb)
 %INPUTS
 %
 markers = {
-    '-+','-o','-^','-s','-p','-h','-v','-d'};
+    '-','-o','-^','-s','-p','-h','-v','-d'};
 figure()
 hold('on');
 for i = 1:size(y,2)
@@ -104,5 +111,5 @@ if exist('cb', 'var')
 end
 matlab2tikz(['tex/tikz/' fname], ...
             'parseStrings', false, ...
-            'width', '0.4\textwidth');
+            'width', '0.35\textwidth');
 end

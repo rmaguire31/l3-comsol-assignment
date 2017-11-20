@@ -1,4 +1,4 @@
-function characterise_results(fname)
+function characterise_results(fname, idx)
 %CHARACTERISE_RESULTS Plots characteristics of COMSOL results `fname`
 %
 %DESCRIPTION
@@ -14,16 +14,57 @@ fname = fname(1:end-4);
 Tname = 'Temperature \si{\celsius}';
 Cname = 'Capacitance \si{\femto\farad}';
 dzname = 'Displacement \si{\micro\meter}';
+
+T_max = nan(size(paramv));
+S = nan(size(paramv));
+for i = 1:length(paramv)
+    T_max(i) = Tv(find(~isnan(dz(:,i)), 1, 'last'));
+    S_ = diff(C(:,i));
+    S(i) = S_(Tv==20);
+end
+
+S
+
 if strcmp(fname, 'material_study')
     paramname = 'Thermal expansion coefficient \si\{\per\kelvin}';
     material = {'\ce{Au}', '\ce{Al}', '\ce{Ti}'};
     paramv = arrayfun(...
         @(i,x)[material{i} num2str(x,'\\tiny($\\alpha=\\SI{%g}{\\per\\kelvin}$)')], ...
         paramv, cte(1,:)', 'UniformOutput', false);
+elseif strcmp(fname, 'beam_length_study') || strcmp(fname, 'support_height_study')
+    paramname = {'$h$ \si{\micro\meter}', '$l$ \si{\micro\meter}'};
+    paramname = paramname{1+strcmp(fname, 'beam_length_study')};
+    xv = paramv;
+    
+    plot_tikz(paramv, C(Tv==20,:)', {}, paramname, Cname, '', ...
+        [fname '.C-x.tex']);
+    
+    [b,~,~,~,stat] = regress(T_max, [ones(length(paramv),1) paramv]);
+    disp(stat(3))
+    x_Tp = [paramv(1) paramv(end)];
+    y_Tp = b*x_Tp;
+    
+    plot_tikz(paramv, T_max, {}, paramname, Tname, '',...
+        [fname '.T_max-x.tex']);
+    
+    plot_tikz(paramv, S, {}, paramname, 'Sensitivity_{\SI{20}{\celsius}} \si{\femto\farad\per\kelvin}', '',...
+        [fname '.S20-x.tex']);
+    
+    paramv = arrayfun(@(x)num2str(x,'\\SI{%g}{\\micro\\meter}'), paramv, ...
+                      'UniformOutput', false);
+end
+
+if exist('idx', 'var')
+    fname = [fname '.' num2str(idx)];
+    paramv = paramv(idx);
+    C = C(:,idx);
+    dz = dz(:,idx);
 end
 
 % Maximum temperature when the value stays the same. Set these to NaN
 C(isnan(dz)) = nan;
+plot_tikz_yy(Tv, C, dz, paramv, Tname, Cname, dzname, paramname, ...
+    [fname '.C-dz-T.tex']);
 plot_tikz(Tv, C, paramv, Tname, Cname, paramname, [fname '.C-T.tex']);
 plot_tikz(Tv, dz, paramv, Tname, dzname, paramname, [fname '.dz-T.tex']);
 plot_tikz(dz, C, paramv, dzname, Cname, paramname, [fname '.C-dz.tex']);
@@ -58,7 +99,7 @@ plot_tikz(dz, C, paramv, dzname, Cname, paramname, [fname '.C-dz.tex']);
     end
 [p_CT, F_CT, b_CT] = regression(Tv,C);
 [p_dzT, F_dzT, b_dzT] = regression(Tv,dz);
-[p_Cdz, F_Cdz, b_Cdz] = regression(dz(:),C(:));
+[p_Cdz, F_Cdz, b_Cdz] = regression(dz,C);
 
 disp('C-T')
 disp(p_CT)
@@ -113,6 +154,11 @@ S_CT = sensitivity(lin_CT, b_CT);
 S_dzT = sensitivity(lin_dzT, b_dzT);
 S_Cdz = sensitivity(lin_Cdz, b_Cdz);
 
+if strcmp(fname, 'beam_length_study')
+    Sname = 'Mechanical sensitivity \si{\micro\meter\per\kelvin}';
+    plot_tikz(xv, S_dzT, {}, paramname, Sname, '', [fname '.S_m-l.tex']);
+end
+
 disp('C-T')
 disp(S_CT)
 disp('dz-T')
@@ -146,14 +192,21 @@ plot_tikz(Tv, C, paramv, Tname, Cname, paramname,...
      [fname '.linearity_C-T.tex'], @()plot_bestfit_cb(x_CT,y_CT));
 plot_tikz(Tv, dz, paramv, Tname, dzname, paramname,...
     [fname '.linearity_dz-T.tex'], @()plot_bestfit_cb(x_dzT,y_dzT));
-[~,idx] = sort(dz(:));
-plot_tikz(dz(idx), C(idx), {}, dzname, Cname, '',...
+plot_tikz(dz, C, paramv, dzname, Cname, paramname,...
     [fname '.linearity_C-dz.tex'], @()plot_bestfit_cb(x_Cdz,y_Cdz));
-    function plot_bestfit_cb(x,y)
+    function plot_bestfit_cb(x,y,xx,yy)
         h = ishold();
         hold('on');
+        if exist('yy', 'var')
+            yyaxis('left');
+        end
         for ii = 1:size(x,2)
             p = plot(x(:,ii), y(:,ii), '--');
+            p.LineWidth = 4*p.LineWidth;
+        end
+        if exist('yy', 'var')
+            yyaxis('right');
+            p = plot(xx(:,ii), yy(:,ii), '--');
             p.LineWidth = 4*p.LineWidth;
         end
         if ~h
@@ -215,11 +268,48 @@ if (size(data,2) >= 4)
 else
     dz = C;
 end
-if (size(data,2) >= 4)
+if (size(data,2) >= 5)
     cte = reshape(data(:,5), length(Tv), length(paramv));
 else
     cte = dz;
 end
+end
+
+function plot_tikz_yy(x, y, yy, paramv, xname, yname, yyname, paramname, fname, cb)
+%DESCRIPTION
+%
+%
+%INPUTS
+%
+return
+
+figure()
+
+yyaxis('left');
+plot(x, y);
+xlabel(xname);
+ylabel(yname);
+
+if ~isvector(y)
+    if isnumeric(paramv)
+        paramv = arrayfun(@(x)[paramname num2str(x,' %g')], paramv,...
+                          'UniformOutput', false);
+    end
+   legend(paramv, 'AutoUpdate', 'off', 'Location', 'northoutside');
+end
+
+yyaxis('right');
+plot(x, yy);
+ylabel(yyname);
+
+% Callback if we need to add anything else.
+if exist('cb', 'var')
+    cb()
+end
+matlab2tikz(['tex/tikz/' fname], ...
+            'parseStrings', false, ...
+            'width', '0.4\textwidth', ...
+            'height', '0.4\textwidth');
 end
 
 function plot_tikz(x, y, paramv, xname, yname, paramname, fname, cb)
@@ -257,5 +347,5 @@ if exist('cb', 'var')
 end
 matlab2tikz(['tex/tikz/' fname], ...
             'parseStrings', false, ...
-            'width', '0.4\textwidth');
+            'width', '0.3\textwidth');
 end
