@@ -1,0 +1,129 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor5}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor6}{rgb}{0.30100,0.74500,0.93300}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.4\textwidth,
+height=0.258\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=0,
+xmax=60,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=-10,
+ymax=15,
+ylabel style={font=\color{white!15!black}},
+ylabel={Displacement \si{\micro\meter}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={at={(0.5,1.03)}, anchor=south, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0	12.1772830460825\\
+5	9.13869755826485\\
+10	6.09313402425773\\
+15	3.04620033004022\\
+20	-0.0016606872621599\\
+25	-3.05010675495152\\
+30	-6.09949477232682\\
+35	nan\\
+40	nan\\
+45	nan\\
+50	nan\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Al}\tiny($\alpha=\SI{2.31e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor2, mark=o, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+0	7.61437295767633\\
+5	5.71264870995948\\
+10	3.80834090012571\\
+15	1.9015454140768\\
+20	-0.00339751868487469\\
+25	-1.90851902814607\\
+30	-3.81384281695528\\
+35	-5.71963254680427\\
+40	-7.62575267443897\\
+45	nan\\
+50	nan\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Au}\tiny($\alpha=\SI{1.42e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor3, mark=triangle, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+0	4.68789495804691\\
+5	3.51570518940953\\
+10	2.34339624927957\\
+15	1.17099532021015\\
+20	-0.00147412376511847\\
+25	-1.17399206557994\\
+30	-2.346547304482\\
+35	-3.51915446076559\\
+40	-4.69189656325893\\
+45	-5.86472870118141\\
+50	-7.03755713992866\\
+55	-8.2109362012596\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Ti}\tiny($\alpha=\SI{8.6e-06}{\per\kelvin}$)}
+
+\addplot [color=mycolor4, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+30	-6.09614283582581\\
+0	12.1830150484272\\
+};
+\addplot [color=mycolor5, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+40	-7.62458927869706\\
+0	7.61698114465458\\
+};
+\addplot [color=mycolor6, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+55	-8.20998804534134\\
+0	4.68860557146216\\
+};
+\end{axis}
+\end{tikzpicture}%

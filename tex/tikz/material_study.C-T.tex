@@ -1,0 +1,111 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.4\textwidth,
+height=0.258\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=0,
+xmax=60,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=12,
+ymax=30,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={at={(0.5,1.03)}, anchor=south, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0	13.6648410785309\\
+5	14.4916759166439\\
+10	15.5094086786335\\
+15	16.8010096767092\\
+20	18.49484463766\\
+25	20.7771969014692\\
+30	24.2820540497028\\
+35	nan\\
+40	nan\\
+45	nan\\
+50	nan\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Al}\tiny($\alpha=\SI{2.31e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor2, mark=o, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+0	14.9688346633668\\
+5	15.6501712728014\\
+10	16.4436546810981\\
+15	17.3805417263902\\
+20	18.4961552351542\\
+25	19.8364647423071\\
+30	21.4934762266047\\
+35	23.7269495667882\\
+40	27.312717625232\\
+45	nan\\
+50	nan\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Au}\tiny($\alpha=\SI{1.42e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor3, mark=triangle, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+0	16.0599156302442\\
+5	16.5759929951726\\
+10	17.147880510609\\
+15	17.784319054519\\
+20	18.4947045093175\\
+25	19.2895668100914\\
+30	20.1845120824866\\
+35	21.2103974362495\\
+40	22.4261166213369\\
+45	23.9383182932526\\
+50	25.9636690484724\\
+55	29.0577968703444\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\ce{Ti}\tiny($\alpha=\SI{8.6e-06}{\per\kelvin}$)}
+
+\end{axis}
+\end{tikzpicture}%

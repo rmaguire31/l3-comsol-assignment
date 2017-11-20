@@ -1,6 +1,8 @@
 \documentclass[a4paper,10pt,twocolumn]{article}
+\usepackage{amsmath}
 \usepackage[english]{babel}
 \usepackage[style=ieee,backend=bibtex]{biblatex} \bibliography{ref.bib}
+\usepackage{booktabs}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{float}
@@ -9,13 +11,20 @@
 \usepackage{nomencl}
 \usepackage{mhchem}
 \usepackage{multicol}
+\usepackage{pgfplots}
+    \pgfplotsset{compat=newest} 
+    \pgfplotsset{plot coordinates/math parser=false} 
+    \newlength\figureheight 
+    \newlength\figurewidth 
 \usepackage{siunitx}
 \usepackage{tikz}
     \usetikzlibrary{arrows}
     \usetikzlibrary{patterns}
     \usetikzlibrary{3d}
+    \usetikzlibrary{plotmarks}
 \usepackage{tikz-3dplot}
 \usepackage{titling}
+\usepackage{threeparttable}
 \usepackage{xspace}
 
 \newcommand{\Comsol}{\textsc{Comsol}\xspace}
@@ -26,8 +35,12 @@
 \newcommand{\cmos}{\textsc{cmos}\xspace}
 \newcommand{\Fem}{\textsc{Fem}\xspace}
 \newcommand{\fem}{\textsc{fem}\xspace}
+\newcommand{\Ic}{\textsc{Ic}\xspace}
+\newcommand{\ic}{\textsc{ic}\xspace}
 \newcommand{\Mems}{\textsc{Mems}\xspace}
 \newcommand{\mems}{\textsc{mems}\xspace}
+\newcommand{\Rtd}{\textsc{Rtd}\xspace}
+\newcommand{\rtd}{\textsc{rtd}\xspace}
 
 % Top matter
 \title{\Mems Multimorph Capacitive Temperature Sensors in \ComsolMultiphysics}
@@ -49,7 +62,7 @@
 
 \twocolumn[{
 \begin{@twocolumnfalse} \centering
-    \includegraphics[width=0.2\textwidth]{img/Durham.png}\\
+    % \includegraphics[width=0.2\textwidth]{img/Durham.png}\\
     \Large\thetitle
     \vskip0.2em
     \large Level 3 Semiconductor, Physics and Devices\\
@@ -61,10 +74,11 @@
     \renewcommand{\abstractname}{\large Abstract}
     \begin{abstract}
         This report describes how the $C$--$T$ characteristics of \mems
-        multimorph capacitive temperature sensors vary with geometry, material
-        choice and thermal-annealing temperature. The sensors were modelled
+        multimorph capacitive temperature sensors vary with geometry,     
+        material choice and prestress conditions. The sensors were modelled
         using \fem and physics simulation software---\ComsolMultiphysics---so
-        the key design choices for the model and mesh are also included.
+        the key design parameters, physics modelling choices and mesh analysis
+        are also included.
     \end{abstract}
     \vskip\parsep
 \end{@twocolumnfalse}
@@ -74,55 +88,142 @@
 \makenomenclature
 
 % Acronyms
-\nomenclature[A0]{\mems}{Microelectromechanical systems}
+\nomenclature[A0]{\cmos}{Complementary metal oxide semiconductor}
+\nomenclature[A1]{\fem}{Finite element modelling}
+\nomenclature[A2]{\mems}{Microelectromechanical systems}
+\nomenclature[A3]{\rtd}{Resistance temperature detector}
+
+\nomenclature[B0]{$\alpha$}{Thermal expansion coefficient
+    \hfill[\si{\per\kelvin}]}
+
+\nomenclature[C0]{$C$}{Capacitance
+    \hfill[\si{\farad}]}
 
 \printnomenclature
 
 \section{Introduction}
 
-In an increasingly data centric world with the number of sensors
+In an increasingly data centric world, the number of sensors found in
+consumer electronics, industrial health monitoring, the automotive industry and
+other sectors is expected exceed one trillion in the next 20
+years~\cite{bryzek2014emergence}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.4\textwidth]{img/trillion-sensors.png}
-    \caption{Janusz Bryzek's trillion sensor vision~\.}
+    \caption{J. Bryzek's trillion sensor vision~\cite{bryzek2014emergence}.}
     \label{fig:tsensors}
 \end{figure}
 
-\emph{why sense temperature?}
+Temperature sensors make up an sizeable portion of this industry: the demand for
+smaller, more efficient and more accurate sensors is rising. There are a few
+existing temperature sensors available across different sectors.
 
-\emph{what temperature sensors are available?}
+\begin{itemize}
+    \item Thermistors: which exhibit a non-linear inverted resistive response
+    across a wide range of temperatures.
+    \item Thermocouples: which generate a non-linear potential difference
+    response to across two dissimilar conductors due to a thermoelectric effect.
+    \item Resistance thermometers (\rtd{}s): which respond with a very linear
+    resistance for some materials: \ce{Pt}, \ce{Cu} and \ce{Ni}.
+    \item Silicon bandgap sensors: which respond in conductivity at scales
+    suitable for \ic{}s.
+\end{itemize}
 
-\emph{why \mems?}
+Multimorph capacitive sensors are an alternative investigated by Scott in his
+2012 paper~\cite{scott2012600}. Unlike resistive temperature sensors,
+capacitive sensors do not consume power at constant temperature. Low power
+consumption combined with small \mems package size means there is opportunity
+for these sensors to dominate in portable devices moving forward.
 
 \section{Background}
 
-\emph{what is a multimorph capacitor?}
+A multimorph is a cantilever composed of layers of with increasing expansion
+coefficients. When current travels in opposite directions through
+two piezo-electric multimorphs layers, the layers are subjected to different
+stresses and the cantilever deflects. This is an actuator.
+
+Temperature responsive multimorphs are composed of layers with increasing
+thermal expansion coefficients. When the multimorph cantilever is heated, it's
+temperature increases, the layers expand by differing amounts and the cantilever
+deflects. This deflection can be sensed through changing capacitance.
+
+\begin{figure}[h] \centering
+    % \includegraphics[width=0.4\textwidth]{img/DEFLECTED-MULTIMORPH.jpg}
+    \caption{Cross-section of a temperature sensitive multimorph.}
+    \label{fig:multimorph}
+\end{figure}
 
 \subsection{Construction}
 
-\emph{how do we build an effective multimorph}
+An effective temperature sensitive multimorph has layers with increasing thermal
+expansion coefficients. Scott uses a three layer multimorph with  thermally
+grown \ce{SiO2}, vapour deposited \ce{Si3N4}, sputtered \ce{Au}.
+Table~\ref{tab:cmos-materials} show the thermal expansion coefficients for a
+range of \cmos compatible materials---the majority of those used in \mems
+manufacture.
 
-\emph{how do we make the sensor practical}
+\begin{table}[h]
+    \centering
+    \begin{threeparttable}
+        \caption{Thermal expansion coefficients of some \cmos compatible
+        materials~\cite{comsol2017material}.}
+        \label{tab:cmos-materials}
+        \begin{tabular}{@{}l l S@{}}
+            \toprule
+            \multicolumn{2}{l}{\cmos compatible material} &
+            \multicolumn{1}{r}{$\alpha$~[\si{\per\kelvin}]} \\
+            \midrule
+            \textbf{Metals} \\
+            \hspace{0.5em}Aluminium       & \ce{Al}    & 23.1e-6 \\
+            \hspace{0.5em}Gold            & \ce{Au}    & 14.2e-6 \\
+            \hspace{0.5em}Titanium        & \ce{Ti}    & 8.6e-6 \\
+            \textbf{Semiconductors} \\
+            \hspace{0.5em}Silicon         & \ce{Si}    & 2.6e-6 \\
+            \textbf{Insulators} \\
+            \hspace{0.5em}Silicon Nitrate & \ce{Si3N4} & 2.3e-6 \\
+            \hspace{0.5em}Silicon Oxide   & \ce{SiO2}  & 0.5e-6 \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
 
-\subsection{Characterisation}
+By layering \ce{Au} ontop of \ce{Si3N4} ontop of \ce{SiO2} 
+(\ce{Au}--\ce{Si3N4}--\ce{SiO2}), Scott was able to design a multimorph 
+cantilever with  increasing temperature expansion coefficients and two
+boundaries where the  internal stresses of each layer interacted. The cantilever 
+to deflected increasingly downwards with temperature.
 
-\emph{multimorph capacitance}
+The \ce{Au} multimorph layer was an easily accessible electrode. However, two
+electrodes are required to read the capacitance developed through a flexible
+dielectric---air and in this case.  A conductive \ce{Si} substrate acted as a 
+fixed electrode on the other side of the air gap, providing mechanical stability 
+during operation and fabrication. The oxide layers insulated the moving \ce{Au} 
+electrode from the fixed \ce{Si} substrate.
 
-\emph{how do we characterise sensitivity?}
-
-\emph{how do we characterise linearity?}
+A practical implementation of a multimorph capcitive temperature sensor at least
+two layers: a conductive metal contact ontop of one or more insulating oxides.
+The cantilever must be mounted ontop of a conductive substrate so the potential
+may be measured at both sides of the varying air gap.
 
 \section{Modelling}
 
+The model used and varied in the following experiments was based on the 
+\ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor proposed by Scott~\cite{scott2012600}.
+
 \subsection{Geometry}
 
-\emph{symmetry}
+In \fem computation there is a trade-off between computation time and accuracy,
+where computation time and normally accuracy increase with the number of degrees
+of freedom. However, techniques can be applied to reduce degrees of freedom
+without affecting accuracy. Figure~\ref{fig:model-symmetry} illustrates the
+sensor geometry modelled and the lines where the two symmetry planes intersect
+external faces.
 
 \begin{figure}[h]
     \centering
     \tdplotsetmaincoords{70}{110}
-    \begin{small}
+    \begin{footnotesize}
     \begin{tikzpicture}[scale=0.4\textwidth/0.800cm,tdplot_main_coords]
 
         % Substrate
@@ -196,19 +297,29 @@ In an increasingly data centric world with the number of sensors
             node[right]{\SI{50}{\micro\meter}};
         \draw [-serif cm] (0.200,0,0) -- ++(0,0,0.050);
     \end{tikzpicture}
-    \end{small}
+    \end{footnotesize}
     \caption{Symmetry lines of the multimorph capacitive temperature
     sensor---marked with dashed lines.}
-    \label{fig:cross-section}
+    \label{fig:model-symmetry}
 \end{figure}
 
+Rather than mesh the entire geometry, only one of the four symmetric quadrants
+was modelled, with symmetric boundary conditions applied to those intersecting
+the symmetry planes. The total capacitance of the four parallel quadrants was
+then found by multiplying all evaluated readings by four as 
+in~\eqref{eq:C-parallel}.
+\begin{equation} \label{eq:C-parallel}
+    C_{||} = \sum_{i}^4{C_i} = 4C
+\end{equation}
 
-\emph{dimensions}
+
+Figure~\ref{fig:model-cross-section} details the dimensions and geometric
+parameters of the \comsol model.
 
 \begin{figure}[h]
     \centering
-    \begin{small}
-    \begin{tikzpicture}[scale=0.4\textwidth/1cm]
+    \begin{footnotesize}
+    \begin{tikzpicture}[scale=0.4\textwidth/1.2cm]
         % Layers
         \path [fill=olive!80]   (0.20,0.72) rectangle (0.85,0.75);
         \path [fill=cyan!80]    (0.20,0.63) rectangle (0.85,0.66);
@@ -221,14 +332,26 @@ In an increasingly data centric world with the number of sensors
         \path [pattern=north east lines] (0.20,0.20) -- (1.00,0.20) --  
             (1.00,0.50) -- (0.45,0.50) -- (0.45,0.60) -- (0.20,0.60) --
             (0.20,0.20);
+
+        \path [fill=olive!80]   (-0.15,0.72) rectangle (0.00,0.75);
+        \path [fill=cyan!80]    (-0.15,0.63) rectangle (0.00,0.66);
+        \path [fill=magenta!80] (-0.15,0.60) rectangle (0.00,0.63);
+        \path [fill=lightgray!80] (-0.40,0.20) rectangle (0.00,0.60);
+        \path [pattern=north east lines] (-0.15,0.72) rectangle (0.00,0.75);
+        \path [pattern=north east lines] (-0.15,0.63) rectangle (0.00,0.66);
+        \path [pattern=north east lines] (-0.15,0.60) rectangle (0.00,0.63);
+        \path [pattern=north east lines] (-0.40,0.20) rectangle (0.00,0.60);
         
         % Witness lines
-        \draw [gray,ultra thin] (0.00,0.75) -- (0.19,0.75);
-        \draw [gray,ultra thin] (0.00,0.72) -- (0.19,0.72);
-        \draw [gray,ultra thin] (0.00,0.60) -- (0.19,0.60);
-        \draw [gray,ultra thin] (0.00,0.50) -- (0.44,0.50);
-        \draw [gray,ultra thin] (0.00,0.20) -- (0.19,0.20);
+        \draw [gray,ultra thin] (0.01,0.75) -- (0.19,0.75);
+        \draw [gray,ultra thin] (0.01,0.72) -- (0.19,0.72);
+        \draw [gray,ultra thin] (0.01,0.60) -- (0.19,0.60);
+        \draw [gray,ultra thin] (0.01,0.50) -- (0.44,0.50);
+        \draw [gray,ultra thin] (0.01,0.20) -- (0.19,0.20);
 
+        \draw [gray,ultra thin] (-0.40,0.10) -- (-0.40,0.19);
+        \draw [gray,ultra thin] (-0.15,0.10) -- (-0.15,0.59);
+        \draw [gray,ultra thin] (0.00,0.10) -- (0.00,0.19);
         \draw [gray,ultra thin] (0.20,0.10) -- (0.20,0.19);
         \draw [gray,ultra thin] (0.45,0.10) -- (0.45,0.49);
         \draw [gray,ultra thin] (0.85,0.10) -- (0.85,0.59);
@@ -243,48 +366,100 @@ In an increasingly data centric world with the number of sensors
         \draw [dotted,thick] (0.20,0.67) -- (0.20,0.71);
         \draw [dashed] (0.20,0.66) -- (0.20,0.20);
 
+        \draw [thick] (0.00,0.20) -- (-0.40,0.20) -- (-0.40,0.60) -- 
+            (-0.15,0.60) -- (-0.15,0.66);
+        \draw [dotted,thick] (-0.15,0.67) -- (-0.15,0.71);
+        \draw [thick] (-0.15,0.72) -- (-0.15,0.75) -- (0.00,0.75);
+        \draw [dashed] (0.00,0.75) -- (0.00,0.72);
+        \draw [dotted,thick] (0.00,0.67) -- (0.00,0.71);
+        \draw [dashed] (0.00,0.66) -- (0.00,0.20);
+
         % Labels
         \node [right] at (0.575,0.80) {metal electrode};
         \draw [latex-] (0.525,0.735) -- (0.525,0.80) -- (0.575,0.80);
-        \node at (0.525,0.69) {$n$ layers};
-        \draw [latex-] (0.525,0.615) -- (0.525,0.55) -- (0.575,0.55);
-        \node [right] at (0.575,0.55) {oxide insulator};
+        \node at (0.525,0.69) {$n=3$ layers};
+        \draw [latex-] (0.525,0.630) -- (0.525,0.55) -- (0.575,0.55);
+        \node [right] at (0.575,0.55) {oxide insulators};
         \node [align=center,fill=lightgray] at (0.60,0.35)
             {conductive silicon electrode};
+        \node [above right,fill=black,text=lightgray,
+            fill opacity=0.8,text opacity=1] at (-0.40,0.20) {$yz$};
+        \node [above left,fill=black,text=lightgray,
+            fill opacity=0.8,text opacity=1] at (1.00,0.20) {$zx$};
+
 
         % Dimensions
         \node [right] at (0.15,0.80) {\SI{1}{\micro\meter}};
         \draw [latex-] (0.10,0.75) -- (0.10,0.80) -- (0.15,0.80);
-        \node at (0.10,0.55) {\SI{10}{\micro\meter}};
+        \node [fill=white,fill opacity=0.8,text opacity=1] at (0.10,0.55) 
+            {$h=\SI{10}{\micro\meter}$};
         \draw [-latex] (0.10,0.67) -- (0.10,0.72);
         \draw [latex-] (0.10,0.60) -- (0.10,0.65);
-        \node (d1) at (0.10,0.35) {\SI{200}{\micro\meter}};
+        \node (d1) at (0.10,0.35) {\SI{190}{\micro\meter}};
         \draw [-latex] [above] (d1) -- (0.10,0.50);
         \draw [-latex] [below] (d1) -- (0.10,0.20);
 
         \node (d2) at (0.325,0.15) {\SI{50}{\micro\meter}};
         \draw [-latex] [left] (d2)-- (0.20,0.15);
         \draw [-latex] [right] (d2) -- (0.45,0.15);
-        \node (d3) at (0.65,0.15) {\SI{350}{\micro\meter}};
+        \node (d3) at (0.65,0.15) {$l=\SI{350}{\micro\meter}$};
         \draw [-latex] [left] (d3) -- (0.45,0.15);
         \draw [-latex] [right] (d3) -- (0.85,0.15);
-        \draw [latex-] (1.00,0.15) -- (1.05,0.15);
         \node at (0.925,0.15) {\SI{20}{\micro\meter}};
+
+        \node at (-0.075,0.15) {\SI{10}{\micro\meter}};
+        \draw [latex-] (0.00,0.15) -- (0.05,0.15);
+        \node (d4) at (-0.275,0.15) {\SI{20}{\micro\meter}};
+        \draw [-latex] [left] (d4)-- (-0.40,0.15);
+        \draw [-latex] [right] (d4) -- (-0.15,0.15);
+
+
     \end{tikzpicture}
-    \end{small}
+    \end{footnotesize}
     \caption{Cross-section of the multimorph temperature sensor---not to scale.}
-    \label{fig:cross-section}
+    \label{fig:model-cross-section}
 \end{figure}
 
-\emph{mesh}
+The model was designed with a thick wafer to provide significant stability. In
+reality silicon wafers range from \SIrange{200}{300}{\milli\meter}. Here the
+substrate was \SI{200}{\micro\meter} thick prior to removing material for the
+air gap. An air gap was left in the model so the electric potential could be meshed and simulated.
 
-\subsection{Materials}
+The sensor was modelled with a margin of \SI{20}{\micro\meter} to determine the 
+
+\subsection{Mesh}
+
+The cuboid nature of the model called for a mapped swept mesh with the greatest
+mesh density in cantilever and air gap.
+
+\subsection{Material}
 \subsection{Physics}
 
 \section{Results}
+
+\subsection{C--T study}
+
+\subsection{Material study}
+
+\begin{figure}[h]
+    \begin{footnotesize}
+        \include{tikz/material_study.C-T}
+    \end{footnotesize}
+    \caption{}
+    \label{fig:material_study.C-T}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{footnotesize}
+        \include{tikz/material_study.C-dz}
+    \end{footnotesize}
+    \caption{}
+    \label{fig:material_study.C-T}
+\end{figure}
+
 \section{Analysis}
 \section{Conclusion}
 
-\printbibliography
+% \printbibliography
 
 \end{document}

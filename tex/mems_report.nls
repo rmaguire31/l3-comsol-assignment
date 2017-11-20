@@ -2,7 +2,23 @@
 
  \nomgroup{A}
 
+  \item [{\cmos}]\begingroup Complementary metal oxide semiconductor\nomeqref {0}
+		\nompageref{1}
+  \item [{\fem}]\begingroup Finite element modelling\nomeqref {0}
+		\nompageref{1}
   \item [{\mems}]\begingroup Microelectromechanical systems\nomeqref {0}
+		\nompageref{1}
+  \item [{\rtd}]\begingroup Resistance temperature detector\nomeqref {0}
+		\nompageref{1}
+
+ \nomgroup{B}
+
+  \item [{$\alpha$}]\begingroup Thermal expansion coefficient     \hfill[\si{\per\kelvin}]\nomeqref {0}
+		\nompageref{1}
+
+ \nomgroup{C}
+
+  \item [{$C$}]\begingroup Capacitance     \hfill[\si{\farad}]\nomeqref {0}
 		\nompageref{1}
 
 \end{thenomenclature}
