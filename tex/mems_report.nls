@@ -2,23 +2,50 @@
 
  \nomgroup{A}
 
+  \item [{\dof}]\begingroup Degrees of freedom\nomeqref {0}
+		\nompageref{1}
   \item [{\cmos}]\begingroup Complementary metal oxide semiconductor\nomeqref {0}
 		\nompageref{1}
   \item [{\fem}]\begingroup Finite element modelling\nomeqref {0}
 		\nompageref{1}
-  \item [{\mems}]\begingroup Microelectromechanical systems\nomeqref {0}
+  \item [{\mems}]\begingroup Micro-electromechanical systems\nomeqref {0}
 		\nompageref{1}
   \item [{\rtd}]\begingroup Resistance temperature detector\nomeqref {0}
 		\nompageref{1}
 
  \nomgroup{B}
 
-  \item [{$\alpha$}]\begingroup Thermal expansion coefficient     \hfill[\si{\per\kelvin}]\nomeqref {0}
+  \item [{$\alpha$}]\begingroup Thermal expansion coefficient     \hfill\si{\per\kelvin}\nomeqref {0}
+		\nompageref{1}
+  \item [{$\epsilon$}]\begingroup Permittivity     \hfill\si{\farad\per\meter}\nomeqref {0}
 		\nompageref{1}
 
- \nomgroup{C}
+ \nomgroup{D}
 
-  \item [{$C$}]\begingroup Capacitance     \hfill[\si{\farad}]\nomeqref {0}
+  \item [{$h$}]\begingroup Support height     \hfill\si{\micro\meter}\nomeqref {0}
+		\nompageref{1}
+  \item [{$l$}]\begingroup Cantilever length     \hfill\si{\micro\meter}\nomeqref {0}
+		\nompageref{1}
+  \item [{$t$}]\begingroup Time     \hfill\si{\second}\nomeqref {0}
+		\nompageref{1}
+  \item [{$w$}]\begingroup Width     \hfill\si{\micro\meter}\nomeqref {0}
+		\nompageref{1}
+
+ \nomgroup{E}
+
+  \item [{$C$}]\begingroup Capacitance     \hfill\si{\femto\farad}\nomeqref {0}
+		\nompageref{1}
+  \item [{$S$}]\begingroup Sensitivity     \hfill\si{\femto\farad\per\kelvin}\nomeqref {0}
+		\nompageref{1}
+  \item [{$S_e$}]\begingroup Electrical sensitivity     \hfill\si{\femto\farad\per\micro\meter}\nomeqref {0}
+		\nompageref{1}
+  \item [{$S_m$}]\begingroup Mechanical sensitivity     \hfill\si{\micro\meter\per\kelvin}\nomeqref {0}
+		\nompageref{1}
+  \item [{$T$}]\begingroup Temperature     \hfill\si{\celsius}\nomeqref {0}
+		\nompageref{1}
+  \item [{$T_0$}]\begingroup Temperature at zero displacement     \hfill\si{\celsius}\nomeqref {0}
+		\nompageref{1}
+  \item [{$T_{max}$}]\begingroup Maximum operating temperature     \hfill\si{\celsius}\nomeqref {0}
 		\nompageref{1}
 
 \end{thenomenclature}
