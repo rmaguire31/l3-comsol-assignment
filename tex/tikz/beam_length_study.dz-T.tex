@@ -1,0 +1,192 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor5}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor6}{rgb}{0.30100,0.74500,0.93300}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.3\textwidth,
+height=0.164\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=0,
+xmax=100,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=-10,
+ymax=10,
+ylabel style={font=\color{white!15!black}},
+ylabel={Displacement \si{\micro\meter}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={at={(0.5,1.03)}, anchor=south, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0	0.65299829590503\\
+5	0.489762588035748\\
+10	0.326513057990553\\
+15	0.163250768673584\\
+20	-2.32250595247233e-05\\
+25	-0.163307868593473\\
+30	-0.326602107584113\\
+35	-0.489904887991557\\
+40	-0.653215156115213\\
+45	-0.816531858629396\\
+50	-0.979853942621809\\
+55	-1.14318035563496\\
+60	-1.30651004571105\\
+65	-1.46984196144216\\
+70	-1.63317505202676\\
+75	-1.79650826733477\\
+80	-1.95984055798659\\
+85	-2.12317087544486\\
+90	-2.2864981721272\\
+95	-2.44982140154305\\
+100	-2.61313951845238\\
+};
+\addlegendentry{\SI{100}{\micro\meter}}
+
+\addplot [color=mycolor2, mark=o, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+0	1.43753777190716\\
+5	1.07817823179377\\
+10	0.718777211981844\\
+15	0.35934424920185\\
+20	-0.000116134743967047\\
+25	-0.359599421903209\\
+30	-0.719101099545378\\
+35	-1.07861666200653\\
+40	-1.43814161325889\\
+45	-1.79767147072801\\
+50	-2.15720177136709\\
+55	-2.51672808187385\\
+60	-2.87624601556141\\
+65	-3.23575125642256\\
+70	-3.59523957967198\\
+75	-3.95470682904854\\
+80	-4.31414877504637\\
+85	-4.67356081129029\\
+90	-5.03293767824912\\
+95	-5.39227368624485\\
+100	-5.75156354186744\\
+};
+\addlegendentry{\SI{150}{\micro\meter}}
+
+\addplot [color=mycolor3, mark=triangle, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+0	2.52615923608465\\
+5	1.89463473629716\\
+10	1.26303043254449\\
+15	0.631359502302699\\
+20	-0.00036491959088854\\
+25	-0.632129765615958\\
+30	-1.26392208495391\\
+35	-1.8957291309459\\
+40	-2.52753854081164\\
+45	-3.15933876315935\\
+50	-3.79111987968769\\
+55	-4.42287337925404\\
+60	-5.05458128006042\\
+65	-5.68622661263683\\
+70	-6.3177863469286\\
+75	-6.949260104914\\
+80	-7.58065148048937\\
+85	-8.21196666596288\\
+90	-8.84325270735671\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\SI{200}{\micro\meter}}
+
+\addplot [color=mycolor4, mark=square, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+0	3.91858795827731\\
+5	2.93894101926839\\
+10	1.95911928819149\\
+15	0.979172439080271\\
+20	-0.000869229315408654\\
+25	-0.980976068369882\\
+30	-1.96111998234379\\
+35	-2.94127671490494\\
+40	-3.92143313091202\\
+45	-4.90158706984561\\
+50	-5.88167048019839\\
+55	-6.86163179896593\\
+60	-7.84155986885482\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\SI{250}{\micro\meter}}
+
+\addplot [color=mycolor5, mark=star, mark options={solid, mycolor5}]
+  table[row sep=crcr]{%
+0	5.61476523577081\\
+5	4.21135951239952\\
+10	2.80690396159327\\
+15	1.40261353383548\\
+20	-0.00183681594732211\\
+25	-1.40639186947496\\
+30	-2.81101060929015\\
+35	-4.21570711615446\\
+40	-5.62011146517401\\
+45	-7.02480009547584\\
+50	-8.43033699195401\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\SI{300}{\micro\meter}}
+
+\addplot [color=mycolor6, mark=star, mark options={solid, mycolor6}]
+  table[row sep=crcr]{%
+0	7.61437296559842\\
+5	5.71264867057512\\
+10	3.80834091632828\\
+15	1.90154541435186\\
+20	-0.00339751868432016\\
+25	-1.9085190247048\\
+30	-3.81384281453227\\
+35	-5.71963254710129\\
+40	-7.62575267449513\\
+45	nan\\
+50	nan\\
+55	nan\\
+60	nan\\
+65	nan\\
+70	nan\\
+75	nan\\
+80	nan\\
+85	nan\\
+90	nan\\
+95	nan\\
+100	nan\\
+};
+\addlegendentry{\SI{350}{\micro\meter}}
+
+\end{axis}
+\end{tikzpicture}%

@@ -1,0 +1,38 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.285\textwidth,
+height=0.225\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+xmin=100,
+xmax=350,
+xlabel style={font=\color{white!15!black}},
+xlabel={$l$ \si{\micro\meter}},
+ymin=5,
+ymax=20,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+100	5.43238713262091\\
+150	8.04465415704843\\
+200	10.6570293065262\\
+250	13.2695805167513\\
+300	15.8825478309725\\
+350	18.4961552351537\\
+};
+\end{axis}
+\end{tikzpicture}%

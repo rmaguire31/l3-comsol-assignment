@@ -1,0 +1,59 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.333\textwidth,
+height=0.263\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+xmin=-6,
+xmax=2,
+xlabel style={font=\color{white!15!black}},
+xlabel={Displacement \si{\micro\meter}},
+ymin=7.5,
+ymax=10.5,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+-5.75156354186744	10.4305023187633\\
+-5.39227368624485	10.2096295269034\\
+-5.03293767824912	10.0052121363029\\
+-4.67356081129029	9.8147659646364\\
+-4.31414877504637	9.636307521761\\
+-3.95470682904854	9.46823464780852\\
+-3.59523957967198	9.30923571899227\\
+-3.23575125642256	9.158215777115\\
+-2.87624601556141	9.01424019744731\\
+-2.51672808187385	8.87650398431767\\
+-2.15720177136709	8.74432572553926\\
+-1.79767147072801	8.61715114315994\\
+-1.43814161325889	8.49455055406412\\
+-1.07861666200653	8.37620451577591\\
+-0.719101099545378	8.26188070184245\\
+-0.359599421903209	8.15140817196768\\
+-0.000116134743967047	8.04465415704843\\
+0.35934424920185	7.94150598857589\\
+0.718777211981844	7.84185866907868\\
+1.07817823179377	7.74560736433538\\
+1.43753777190716	7.65264494760704\\
+};
+\addplot [color=mycolor2, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+-1.79767147072801	8.5944914260274\\
+1.43753777190716	7.63107683347486\\
+};
+\end{axis}
+\end{tikzpicture}%

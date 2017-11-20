@@ -1,0 +1,74 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.285\textwidth,
+height=0.225\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=0,
+xmax=350,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=4,
+ymax=18,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0	4.74332926687426\\
+10	4.79440582096665\\
+20	4.85568045765778\\
+30	4.92139250486759\\
+40	4.99087434962227\\
+50	5.06430522171536\\
+60	5.14199448929021\\
+70	5.22430012379089\\
+80	5.31162630965938\\
+90	5.40443016728111\\
+100	5.50323342073537\\
+110	5.60863506259843\\
+120	5.72132896925088\\
+130	5.84212619580983\\
+140	5.97198333272778\\
+150	6.11203827902679\\
+160	6.26365849213621\\
+170	6.42850471276609\\
+180	6.60861734803031\\
+190	6.80653531960944\\
+200	7.02546286786873\\
+210	7.26951597769407\\
+220	7.57984621907186\\
+230	7.89713867635644\\
+240	8.26351624161515\\
+250	8.69388023590809\\
+260	9.21060506939903\\
+270	9.84937820648252\\
+280	10.6719302949376\\
+290	11.7983786966884\\
+300	13.5111326723292\\
+310	16.7739405429434\\
+320	nan\\
+330	nan\\
+340	nan\\
+350	nan\\
+360	nan\\
+370	nan\\
+380	nan\\
+390	nan\\
+400	nan\\
+};
+\end{axis}
+\end{tikzpicture}%

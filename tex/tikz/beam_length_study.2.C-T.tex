@@ -1,0 +1,53 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.333\textwidth,
+height=0.263\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+xmin=0,
+xmax=100,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=7.5,
+ymax=10.5,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0	7.65264494760704\\
+5	7.74560736433538\\
+10	7.84185866907868\\
+15	7.94150598857589\\
+20	8.04465415704843\\
+25	8.15140817196768\\
+30	8.26188070184245\\
+35	8.37620451577591\\
+40	8.49455055406412\\
+45	8.61715114315994\\
+50	8.74432572553926\\
+55	8.87650398431767\\
+60	9.01424019744731\\
+65	9.158215777115\\
+70	9.30923571899227\\
+75	9.46823464780852\\
+80	9.636307521761\\
+85	9.8147659646364\\
+90	10.0052121363029\\
+95	10.2096295269034\\
+100	10.4305023187633\\
+};
+\end{axis}
+\end{tikzpicture}%

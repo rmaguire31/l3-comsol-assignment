@@ -1,0 +1,80 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.285\textwidth,
+height=0.225\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=0,
+xmax=350,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=-20,
+ymax=120,
+ylabel style={font=\color{white!15!black}},
+ylabel={Displacement \si{\micro\meter}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0	106.339780118681\\
+10	103.410280352486\\
+20	100.058881685444\\
+30	96.6302304071976\\
+40	93.1731200679242\\
+50	89.693432580001\\
+60	86.1924208836555\\
+70	82.6709218816663\\
+80	79.1297393253415\\
+90	75.5696991684979\\
+100	71.9916095907133\\
+110	68.3963043664823\\
+120	64.7846138774193\\
+130	61.1573772909801\\
+140	57.5154306635256\\
+150	53.8596274715014\\
+160	50.1908236806427\\
+170	46.5098764867497\\
+180	42.8176409069484\\
+190	39.1149760683626\\
+200	35.4027643767099\\
+210	31.6818685707908\\
+220	27.5263842745514\\
+230	23.7921251367133\\
+240	20.0520739585319\\
+250	16.3069506750397\\
+260	12.5576325472833\\
+270	8.80499549464453\\
+280	5.04991094224545\\
+290	1.29323581887367\\
+300	-2.46422300794743\\
+310	-6.22197674313941\\
+320	nan\\
+330	nan\\
+340	nan\\
+350	nan\\
+360	nan\\
+370	nan\\
+380	nan\\
+390	nan\\
+400	nan\\
+};
+\addplot [color=mycolor2, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+240	20.9638137663296\\
+0	107.649146488992\\
+};
+\end{axis}
+\end{tikzpicture}%

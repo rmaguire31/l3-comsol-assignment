@@ -1,0 +1,59 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.333\textwidth,
+height=0.263\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+xmin=0,
+xmax=100,
+xlabel style={font=\color{white!15!black}},
+xlabel={Temperature \si{\celsius}},
+ymin=-6,
+ymax=2,
+ylabel style={font=\color{white!15!black}},
+ylabel={Displacement \si{\micro\meter}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+  table[row sep=crcr]{%
+0	1.43753777190716\\
+5	1.07817823179377\\
+10	0.718777211981844\\
+15	0.35934424920185\\
+20	-0.000116134743967047\\
+25	-0.359599421903209\\
+30	-0.719101099545378\\
+35	-1.07861666200653\\
+40	-1.43814161325889\\
+45	-1.79767147072801\\
+50	-2.15720177136709\\
+55	-2.51672808187385\\
+60	-2.87624601556141\\
+65	-3.23575125642256\\
+70	-3.59523957967198\\
+75	-3.95470682904854\\
+80	-4.31414877504637\\
+85	-4.67356081129029\\
+90	-5.03293767824912\\
+95	-5.39227368624485\\
+100	-5.75156354186744\\
+};
+\addplot [color=mycolor2, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+100	-5.7519381360636\\
+0	1.4376746156879\\
+};
+\end{axis}
+\end{tikzpicture}%

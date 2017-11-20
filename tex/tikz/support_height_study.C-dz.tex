@@ -1,0 +1,192 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor5}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor6}{rgb}{0.30100,0.74500,0.93300}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=0.3\textwidth,
+height=0.164\textwidth,
+at={(0\textwidth,0\textwidth)},
+scale only axis,
+unbounded coords=jump,
+xmin=-20,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={Displacement \si{\micro\meter}},
+ymin=10,
+ymax=35,
+ylabel style={font=\color{white!15!black}},
+ylabel={Capacitance \si{\femto\farad}},
+axis background/.style={fill=white},
+axis x line*=bottom,
+axis y line*=left,
+legend style={at={(0.5,1.03)}, anchor=south, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+7.61437295557007	14.9688346640975\\
+5.7126485891214	15.6501713212012\\
+3.80834090524081	16.443654678537\\
+1.90154541790599	17.3805417240384\\
+-0.00339751868411659	18.4961552351536\\
+-1.90851902899204	19.8364647429579\\
+-3.81384281764794	21.4934762274033\\
+-5.71963254589782	23.7269495653176\\
+-7.625752676558	27.3127176311112\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{10}{\micro\meter}}
+
+\addplot [color=mycolor2, mark=o, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+7.62343984358724	13.7598157182614\\
+5.71989423019131	14.3126730615192\\
+3.81337137552376	14.9434067205356\\
+1.90396024710702	15.6694530314202\\
+-0.003173383941905	16.5085744387342\\
+-1.91045025074018	17.4850605217379\\
+-3.81780009681071	18.6394973341531\\
+-5.72524988698252	20.068327752161\\
+-7.63273976130665	21.9927120204377\\
+-9.53795583597345	25.0299508470697\\
+-11.4545953113637	32.8151466366432\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{12}{\micro\meter}}
+
+\addplot [color=mycolor3, mark=triangle, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+7.60055369099442	12.6691875368958\\
+5.70363465533326	13.1317703184364\\
+3.79944193848344	13.6533295848431\\
+1.89831212833287	14.2412907512769\\
+-0.00304907717621212	14.9070169224678\\
+-1.90453206357011	15.6609490452969\\
+-3.80604678676308	16.5197426994877\\
+-5.70755563678105	17.5248847406717\\
+-7.60904823313829	18.7632062569383\\
+-9.51021821670787	20.4179554347566\\
+-11.4080759567624	22.9793294649201\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{14}{\micro\meter}}
+
+\addplot [color=mycolor4, mark=square, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+7.60028146504864	11.7930206537658\\
+5.70415704205457	12.1898958433327\\
+3.79933809808003	12.6326729962965\\
+1.89829645864809	13.1248514821193\\
+-0.00296889106246433	13.6731385412404\\
+-1.90434824525812	14.2822159425246\\
+-3.80573784941986	14.9589338756047\\
+-5.70706872866414	15.7230626580605\\
+-7.60835179318433	16.6166053434118\\
+-9.50932064202503	17.7153010560242\\
+-11.4058257619858	19.1724073586349\\
+-13.3099523452045	21.4039850880066\\
+-15.2121885377271	26.1818687304859\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{16}{\micro\meter}}
+
+\addplot [color=mycolor5, mark=star, mark options={solid, mycolor5}]
+  table[row sep=crcr]{%
+7.59994942584397	11.0751159443261\\
+5.70536721914966	11.420791199081\\
+3.79919744748313	11.803144244846\\
+1.89825395734754	12.2227968111075\\
+-0.00290718645718465	12.6841223004548\\
+-1.90417438335328	13.1895328491529\\
+-3.80543587540444	13.7424249616235\\
+-5.70659932059821	14.3527549201514\\
+-7.60762092278854	15.0429926918618\\
+-9.50853019219156	15.8512666563486\\
+-11.408819220577	16.844282003929\\
+-13.3031121483158	18.1537658959282\\
+-15.2075543114465	20.1369580419378\\
+-17.1078742916936	24.2553551881206\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{18}{\micro\meter}}
+
+\addplot [color=mycolor6, mark=star, mark options={solid, mycolor6}]
+  table[row sep=crcr]{%
+7.59952324029684	10.456359873604\\
+5.69949122508791	10.76230153491\\
+3.79899842874757	11.0959816775362\\
+1.89817702966793	11.4599519610226\\
+-0.00286036694615195	11.8560899238745\\
+-1.9039973583616	12.2854246028212\\
+-3.80512015884503	12.7492509361825\\
+-5.70611776937355	13.2526278962436\\
+-7.60692333986205	13.8084452896672\\
+-9.50757298000092	14.4383441254444\\
+-11.4079231245309	15.1761547540507\\
+-13.3071457126504	16.0808470609285\\
+-15.1981714348158	17.2657920128144\\
+-17.1037207024092	19.0367738632767\\
+-19.0022894759206	22.5677003345499\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\SI{20}{\micro\meter}}
+
+\end{axis}
+\end{tikzpicture}%

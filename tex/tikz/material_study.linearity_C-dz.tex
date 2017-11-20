@@ -6,12 +6,16 @@
 %
 \definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
 \definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor5}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor6}{rgb}{0.30100,0.74500,0.93300}%
 %
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.38\textwidth,
-height=0.3\textwidth,
+width=0.3\textwidth,
+height=0.194\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
 unbounded coords=jump,
@@ -19,65 +23,24 @@ xmin=-10,
 xmax=15,
 xlabel style={font=\color{white!15!black}},
 xlabel={Displacement \si{\micro\meter}},
-ymin=12,
+ymin=5,
 ymax=30,
 ylabel style={font=\color{white!15!black}},
 ylabel={Capacitance \si{\femto\farad}},
 axis background/.style={fill=white},
 axis x line*=bottom,
-axis y line*=left
+axis y line*=left,
+legend style={at={(0.5,1.03)}, anchor=south, legend cell align=left, align=left, draw=white!15!black}
 ]
-\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}, forget plot]
+\addplot [color=mycolor1, mark=+, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
--8.2109362012596	29.0577968703444\\
--7.62575267443897	27.312717625232\\
--7.03755713992866	25.9636690484724\\
--6.09949477232682	24.2820540497028\\
--5.86472870118141	23.9383182932526\\
--5.71963254680427	23.7269495667882\\
--4.69189656325893	22.4261166213369\\
--3.81384281695528	21.4934762266047\\
--3.51915446076559	21.2103974362495\\
--3.05010675495152	20.7771969014692\\
--2.346547304482	20.1845120824866\\
--1.90851902814607	19.8364647423071\\
--1.17399206557994	19.2895668100914\\
--0.00339751868487469	18.4961552351542\\
--0.0016606872621599	18.49484463766\\
--0.00147412376511847	18.4947045093175\\
-1.17099532021015	17.784319054519\\
-1.9015454140768	17.3805417263902\\
-2.34339624927957	17.147880510609\\
-3.04620033004022	16.8010096767092\\
-3.51570518940953	16.5759929951726\\
-3.80834090012571	16.4436546810981\\
-4.68789495804691	16.0599156302442\\
-5.71264870995948	15.6501712728014\\
-6.09313402425773	15.5094086786335\\
-7.61437295767633	14.9688346633668\\
-9.13869755826485	14.4916759166439\\
 12.1772830460825	13.6648410785309\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
-nan	nan\\
+9.13869755826485	14.4916759166439\\
+6.09313402425773	15.5094086786335\\
+3.04620033004022	16.8010096767092\\
+-0.0016606872621599	18.49484463766\\
+-3.05010675495152	20.7771969014692\\
+-6.09949477232682	24.2820540497028\\
 nan	nan\\
 nan	nan\\
 nan	nan\\
@@ -93,10 +56,74 @@ nan	nan\\
 nan	nan\\
 nan	nan\\
 };
-\addplot [color=mycolor2, dashed, line width=2.0pt, forget plot]
+\addlegendentry{\ce{Al}\tiny($\alpha=\SI{2.31e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor2, mark=o, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+7.61437295767633	14.9688346633668\\
+5.71264870995948	15.6501712728014\\
+3.80834090012571	16.4436546810981\\
+1.9015454140768	17.3805417263902\\
+-0.00339751868487469	18.4961552351542\\
+-1.90851902814607	19.8364647423071\\
+-3.81384281695528	21.4934762266047\\
+-5.71963254680427	23.7269495667882\\
+-7.62575267443897	27.312717625232\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\ce{Au}\tiny($\alpha=\SI{1.42e-05}{\per\kelvin}$)}
+
+\addplot [color=mycolor3, mark=triangle, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+4.68789495804691	16.0599156302442\\
+3.51570518940953	16.5759929951726\\
+2.34339624927957	17.147880510609\\
+1.17099532021015	17.784319054519\\
+-0.00147412376511847	18.4947045093175\\
+-1.17399206557994	19.2895668100914\\
+-2.346547304482	20.1845120824866\\
+-3.51915446076559	21.2103974362495\\
+-4.69189656325893	22.4261166213369\\
+-5.86472870118141	23.9383182932526\\
+-7.03755713992866	25.9636690484724\\
+-8.2109362012596	29.0577968703444\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+nan	nan\\
+};
+\addlegendentry{\ce{Ti}\tiny($\alpha=\SI{8.6e-06}{\per\kelvin}$)}
+
+\addplot [color=mycolor4, dashed, line width=2.0pt, forget plot]
   table[row sep=crcr]{%
 12.1772830460825	12.6404798388196\\
 12.1772830460825	12.6404798388196\\
+};
+\addplot [color=mycolor5, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+12.1772830460825	10.2970120502315\\
+12.1772830460825	10.2970120502315\\
+};
+\addplot [color=mycolor6, dashed, line width=2.0pt, forget plot]
+  table[row sep=crcr]{%
+12.1772830460825	7.90783524654425\\
+12.1772830460825	7.90783524654425\\
 };
 \end{axis}
 \end{tikzpicture}%

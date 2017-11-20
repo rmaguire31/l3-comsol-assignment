@@ -3,6 +3,7 @@
 \usepackage[english]{babel}
 \usepackage[style=ieee,backend=bibtex]{biblatex} \bibliography{ref.bib}
 \usepackage{booktabs}
+\usepackage[font={small}]{caption}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{float}
@@ -10,7 +11,9 @@
 \usepackage[latin1]{inputenc}
 \usepackage{nomencl}
 \usepackage{mhchem}
+\usepackage{microtype}
 \usepackage{multicol}
+\usepackage{placeins}
 \usepackage{pgfplots}
     \pgfplotsset{compat=newest} 
     \pgfplotsset{plot coordinates/math parser=false} 
@@ -33,6 +36,8 @@
     \textsc{Comsol}~Multiphysics\textsuperscript{\textregistered}\xspace}
 \newcommand{\Cmos}{\textsc{Cmos}\xspace}
 \newcommand{\cmos}{\textsc{cmos}\xspace}
+\newcommand{\Dof}{\textsc{Dof}\xspace}
+\newcommand{\dof}{\textsc{dof}\xspace}
 \newcommand{\Fem}{\textsc{Fem}\xspace}
 \newcommand{\fem}{\textsc{fem}\xspace}
 \newcommand{\Ic}{\textsc{Ic}\xspace}
@@ -57,26 +62,34 @@
 
 \begin{document}
 
-% Title and abstract
-\thispagestyle{plain}
-
-\twocolumn[{
-\begin{@twocolumnfalse} \centering
-    % \includegraphics[width=0.2\textwidth]{img/Durham.png}\\
-    \Large\thetitle
+% Title page.
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    \includegraphics[width=0.5\textwidth]{img/Durham.png}\\
+    \vspace*{\fill}
+    \LARGE\thetitle\\
     \vskip0.2em
     \large Level 3 Semiconductor, Physics and Devices\\
     \vskip0.4em
     \large\theauthor\\
     \vskip0.4em
     \large\thedate\\
-    \hrulefill
+    \vspace*{\fill}
+\end{titlepage}
+
+\twocolumn[{%
+\begin{@twocolumnfalse} \centering
     \renewcommand{\abstractname}{\large Abstract}
     \begin{abstract}
         This report describes how the $C$--$T$ characteristics of \mems
         multimorph capacitive temperature sensors vary with geometry,     
-        material choice and prestress conditions. The sensors were modelled
-        using \fem and physics simulation software---\ComsolMultiphysics---so
+        material choice and prestress conditions. The unmodified sensor had a
+        sensitivity \SI{1.3403}{\femto\farad\per\kelvin} at room temperature,
+        with an operating range up to \SI{46.2}{\celsius}. The range was
+        increased to \SI{310}{\celsius} and linearised up to \SI{80}{\celsius},
+        at the expense of reduced sensitivity. The sensors were modelled using
+        \fem and physics simulation software---\ComsolMultiphysics---so
         the key design parameters, physics modelling choices and mesh analysis
         are also included.
     \end{abstract}
@@ -88,57 +101,75 @@
 \makenomenclature
 
 % Acronyms
-\nomenclature[A0]{\cmos}{Complementary metal oxide semiconductor}
-\nomenclature[A1]{\fem}{Finite element modelling}
-\nomenclature[A2]{\mems}{Microelectromechanical systems}
-\nomenclature[A3]{\rtd}{Resistance temperature detector}
+\nomenclature[A0]{\dof}{Degrees of freedom}
+\nomenclature[A1]{\cmos}{Complementary metal oxide semiconductor}
+\nomenclature[A2]{\fem}{Finite element modelling}
+\nomenclature[A3]{\mems}{Micro-electromechanical systems}
+\nomenclature[A4]{\rtd}{Resistance temperature detector}
 
+% greek
 \nomenclature[B0]{$\alpha$}{Thermal expansion coefficient
-    \hfill[\si{\per\kelvin}]}
+    \hfill\si{\per\kelvin}}
+\nomenclature[B0]{$\epsilon$}{Permittivity
+    \hfill\si{\farad\per\meter}}
 
-\nomenclature[C0]{$C$}{Capacitance
-    \hfill[\si{\farad}]}
+% latin
+\nomenclature[D0]{$h$}{Support height
+    \hfill\si{\micro\meter}}
+\nomenclature[D1]{$l$}{Cantilever length
+    \hfill\si{\micro\meter}}
+\nomenclature[D2]{$t$}{Time
+    \hfill\si{\second}}
+\nomenclature[D2]{$w$}{Width
+    \hfill\si{\micro\meter}}
 
-\printnomenclature
+% Latin
+\nomenclature[E0]{$C$}{Capacitance
+    \hfill\si{\femto\farad}}
+\nomenclature[E10]{$S$}{Sensitivity
+    \hfill\si{\femto\farad\per\kelvin}}
+\nomenclature[E11]{$S_e$}{Electrical sensitivity
+    \hfill\si{\femto\farad\per\micro\meter}}
+\nomenclature[E12]{$S_m$}{Mechanical sensitivity
+    \hfill\si{\micro\meter\per\kelvin}}
+\nomenclature[E20]{$T$}{Temperature
+    \hfill\si{\celsius}}
+\nomenclature[E21]{$T_0$}{Temperature at zero displacement
+    \hfill\si{\celsius}}
+\nomenclature[E21]{$T_{max}$}{Maximum operating temperature
+    \hfill\si{\celsius}}
+
+\begin{small}
+    \printnomenclature
+\end{small}
 
 \section{Introduction}
 
 In an increasingly data centric world, the number of sensors found in
 consumer electronics, industrial health monitoring, the automotive industry and
-other sectors is expected exceed one trillion in the next 20
+other sectors is expected to exceed one trillion in the next 20
 years~\cite{bryzek2014emergence}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.4\textwidth]{img/trillion-sensors.png}
+    \includegraphics[width=0.35\textwidth]{img/trillion-sensors.png}
     \caption{J. Bryzek's trillion sensor vision~\cite{bryzek2014emergence}.}
     \label{fig:tsensors}
 \end{figure}
 
 Temperature sensors make up an sizeable portion of this industry: the demand for
-smaller, more efficient and more accurate sensors is rising. There are a few
-existing temperature sensors available across different sectors.
+smaller, more efficient and more accurate sensors is rising. There are a many
+existing temperature sensors available across the different sectors.
 
-\begin{itemize}
-    \item Thermistors: which exhibit a non-linear inverted resistive response
-    across a wide range of temperatures.
-    \item Thermocouples: which generate a non-linear potential difference
-    response to across two dissimilar conductors due to a thermoelectric effect.
-    \item Resistance thermometers (\rtd{}s): which respond with a very linear
-    resistance for some materials: \ce{Pt}, \ce{Cu} and \ce{Ni}.
-    \item Silicon bandgap sensors: which respond in conductivity at scales
-    suitable for \ic{}s.
-\end{itemize}
-
-Multimorph capacitive sensors are an alternative investigated by Scott in his
-2012 paper~\cite{scott2012600}. Unlike resistive temperature sensors,
+Multimorph capacitive sensors are an alternative sensor investigated by Scott in
+his 2012 paper~\cite{scott2012600}. Unlike resistive temperature sensors,
 capacitive sensors do not consume power at constant temperature. Low power
 consumption combined with small \mems package size means there is opportunity
 for these sensors to dominate in portable devices moving forward.
 
 \section{Background}
 
-A multimorph is a cantilever composed of layers of with increasing expansion
+A multimorph is a cantilever composed of layers with increasing expansion
 coefficients. When current travels in opposite directions through
 two piezo-electric multimorphs layers, the layers are subjected to different
 stresses and the cantilever deflects. This is an actuator.
@@ -146,70 +177,64 @@ stresses and the cantilever deflects. This is an actuator.
 Temperature responsive multimorphs are composed of layers with increasing
 thermal expansion coefficients. When the multimorph cantilever is heated, it's
 temperature increases, the layers expand by differing amounts and the cantilever
-deflects. This deflection can be sensed through changing capacitance.
+deflects. This deflection can be sensed through changing capacitance. The 
+sensitivity of these devices is thus composed of two parts: the mechanical and 
+electrical sensitivity, such that
+\begin{equation} \label{eq:S}
+    S=S_m S_e
+\end{equation}
 
-\begin{figure}[h] \centering
-    % \includegraphics[width=0.4\textwidth]{img/DEFLECTED-MULTIMORPH.jpg}
-    \caption{Cross-section of a temperature sensitive multimorph.}
-    \label{fig:multimorph}
-\end{figure}
+% \begin{figure}[h] \centering
+%     % \includegraphics[width=0.4\textwidth]{img/DEFLECTED-MULTIMORPH.jpg}
+%     \caption{Cross-section of a temperature sensitive multimorph.}
+%     \label{fig:multimorph}
+% \end{figure}
 
 \subsection{Construction}
 
-An effective temperature sensitive multimorph has layers with increasing thermal
-expansion coefficients. Scott uses a three layer multimorph with  thermally
-grown \ce{SiO2}, vapour deposited \ce{Si3N4}, sputtered \ce{Au}.
-Table~\ref{tab:cmos-materials} show the thermal expansion coefficients for a
-range of \cmos compatible materials---the majority of those used in \mems
-manufacture.
+An effective temperature sensitive multimorph has layers with increasing
+\emph{thermal} expansion coefficients. Table~\ref{tab:cmos-materials} show the 
+thermal expansion coefficients for a range of \cmos compatible materials---the 
+majority of those used in \mems manufacture.
 
 \begin{table}[h]
     \centering
-    \begin{threeparttable}
-        \caption{Thermal expansion coefficients of some \cmos compatible
-        materials~\cite{comsol2017material}.}
-        \label{tab:cmos-materials}
-        \begin{tabular}{@{}l l S@{}}
-            \toprule
-            \multicolumn{2}{l}{\cmos compatible material} &
-            \multicolumn{1}{r}{$\alpha$~[\si{\per\kelvin}]} \\
-            \midrule
-            \textbf{Metals} \\
-            \hspace{0.5em}Aluminium       & \ce{Al}    & 23.1e-6 \\
-            \hspace{0.5em}Gold            & \ce{Au}    & 14.2e-6 \\
-            \hspace{0.5em}Titanium        & \ce{Ti}    & 8.6e-6 \\
-            \textbf{Semiconductors} \\
-            \hspace{0.5em}Silicon         & \ce{Si}    & 2.6e-6 \\
-            \textbf{Insulators} \\
-            \hspace{0.5em}Silicon Nitrate & \ce{Si3N4} & 2.3e-6 \\
-            \hspace{0.5em}Silicon Oxide   & \ce{SiO2}  & 0.5e-6 \\
-            \bottomrule
-        \end{tabular}
-    \end{threeparttable}
+    \begin{small}
+        \begin{threeparttable}
+            \caption{Thermal expansion coefficients of some \cmos compatible
+            materials~\cite{comsol2017material}.}
+            \label{tab:cmos-materials}
+            \begin{tabular}{@{}l l S@{}}
+                \toprule
+                \multicolumn{2}{l}{\cmos compatible material} &
+                \multicolumn{1}{r}{$\alpha$~[\si{\per\kelvin}]} \\
+                \midrule
+                \textbf{Metals} \\
+                \hspace{0.5em}Aluminium       & \ce{Al}    & 23.1e-6 \\
+                \hspace{0.5em}Gold            & \ce{Au}    & 14.2e-6 \\
+                \hspace{0.5em}Titanium        & \ce{Ti}    & 8.6e-6 \\
+                \textbf{Semiconductors} \\
+                \hspace{0.5em}Silicon         & \ce{Si}    & 2.6e-6 \\
+                \textbf{Insulators} \\
+                \hspace{0.5em}Silicon Nitrate & \ce{Si3N4} & 2.3e-6 \\
+                \hspace{0.5em}Silicon Oxide   & \ce{SiO2}  & 0.5e-6 \\
+                \bottomrule
+            \end{tabular}
+        \end{threeparttable}
+    \end{small}
 \end{table}
 
-By layering \ce{Au} ontop of \ce{Si3N4} ontop of \ce{SiO2} 
-(\ce{Au}--\ce{Si3N4}--\ce{SiO2}), Scott was able to design a multimorph 
-cantilever with  increasing temperature expansion coefficients and two
-boundaries where the  internal stresses of each layer interacted. The cantilever 
-to deflected increasingly downwards with temperature.
-
-The \ce{Au} multimorph layer was an easily accessible electrode. However, two
-electrodes are required to read the capacitance developed through a flexible
-dielectric---air and in this case.  A conductive \ce{Si} substrate acted as a 
-fixed electrode on the other side of the air gap, providing mechanical stability 
-during operation and fabrication. The oxide layers insulated the moving \ce{Au} 
-electrode from the fixed \ce{Si} substrate.
-
-A practical implementation of a multimorph capcitive temperature sensor at least
-two layers: a conductive metal contact ontop of one or more insulating oxides.
-The cantilever must be mounted ontop of a conductive substrate so the potential
-may be measured at both sides of the varying air gap.
+A practical implementation of a multimorph capcitive temperature sensor should
+have at least two layers: a conductive metal terminal layer over one or more 
+insulating oxides. The cantilever must be mounted on a ground conductive 
+substrate so the potential may be measured at both sides of the varying
+air gap.
 
 \section{Modelling}
 
 The model used and varied in the following experiments was based on the 
-\ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor proposed by Scott~\cite{scott2012600}.
+\ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor proposed by Scott~\cite{scott2012600},
+with a conductive silicon base.
 
 \subsection{Geometry}
 
@@ -306,12 +331,10 @@ external faces.
 Rather than mesh the entire geometry, only one of the four symmetric quadrants
 was modelled, with symmetric boundary conditions applied to those intersecting
 the symmetry planes. The total capacitance of the four parallel quadrants was
-then found by multiplying all evaluated readings by four as 
-in~\eqref{eq:C-parallel}.
+then found by multiplying all evaluated readings by four
 \begin{equation} \label{eq:C-parallel}
     C_{||} = \sum_{i}^4{C_i} = 4C
 \end{equation}
-
 
 Figure~\ref{fig:model-cross-section} details the dimensions and geometric
 parameters of the \comsol model.
@@ -420,46 +443,282 @@ parameters of the \comsol model.
     \label{fig:model-cross-section}
 \end{figure}
 
-The model was designed with a thick wafer to provide significant stability. In
-reality silicon wafers range from \SIrange{200}{300}{\milli\meter}. Here the
-substrate was \SI{200}{\micro\meter} thick prior to removing material for the
-air gap. An air gap was left in the model so the electric potential could be meshed and simulated.
-
-The sensor was modelled with a margin of \SI{20}{\micro\meter} to determine the 
-
+The sensor model had a margin of \SI{20}{\micro\meter} around the cantilever so
+the electric field lines at the edge of the multimorph could be accounted for.
+This did lead to inverted mesh errors at large displacements so was set to zero
+for some studies.
+ 
 \subsection{Mesh}
 
-The cuboid nature of the model called for a mapped swept mesh with the greatest
-mesh density in cantilever and air gap.
+The blocky nature of the model called for a mapped swept mesh with the greatest
+mesh density in the cantilever and air gap. The custom mesh for the sensor
+quadrant is shown in Figure~\ref{fig:mesh}, with the two symmetric boundaries
+facing the camera.
 
-\subsection{Material}
-\subsection{Physics}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{img/mesh.png}
+    \caption{Mapped-swept mesh for sensor model.}
+    \label{fig:mesh}
+\end{figure}
 
-\section{Results}
+Geometric distributions were defined along the length of the cantilever and down
+into the substrate. In the cantilever, the displacement was greatest at the
+ends, so a finer mesh was chosen for this region. On the other hand, the
+conductive base experienced little deflection and had a high relative
+permittivity so degrees of freedom were saved in this region. \Comsol reported
+an average mesh quality of 0.88.
 
-\subsection{C--T study}
+The mesh size was driven by the vertical distribution of elements in the 
+\SI{10}{\micro\meter} air gap. A short mesh study was conducted to determine the 
+relative error and find a suitable tradeoff between accuracy and computation
+time. The resulting model comprised 102081 degrees of freedom.
+
+\subsection{Studies}
+
+The studies carried out were as follows: first, a study into C--T characteristic
+of a multimorph capacitive temperature sensor; then, how the C--T characteristic
+varied with parameters $h$ and $l$; the effect of metal choice and thermal
+expansion coefficient was investigated; the cantilever was pre-stressed to
+increase the temperature range; and finally, a time-dependent study was used to
+model the step response of the sensor.
+
+The \comsol \emph{electromechanics} module was used for the majority of the
+studies. The air gap was defined an electrical material with a mesh which
+was allowed to move in the vertical direction. All other domains were modelled
+as linear elastic materials so their displacement could be modelled. 
+Thermal expansion was added to the cantilever but not the substrate to
+reduce complexity.
+
+For the pre-stress study, a compressive initial vertical stress was added to the
+cantilever domains. The margin around the edges of the cantilever was removed to
+mitigate the inverted mesh errors caused by the resulting large displacements.
+The modified model and mesh are shown in Figure~\ref{fig:pre-stress-mesh}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{img/pre_stress_mesh.png}
+    \caption{Mapped-swept mesh without air gap margin for pre-stress study.}
+    \label{fig:pre-stress-mesh}
+\end{figure}
+
+To model the step response, a different set of physics was required. The air gap
+was removed and all domains were defined as solids in the \emph{heat
+transfer in solids} module. An air box was added as a fluid so a step in
+temperature could be applied. \emph{Thermal expansion} and \emph{thermal
+coupling} multiphysics was used to couple the heat transfer module to the
+\emph{structures} module, which simulated the deflection of the linear elastic
+bodies in the model in response. To get the solution to converge, the step
+function was smoothed to a \SI{0.1}{\second} transition from \SIrange{20}{21}
+{\celsius}.
+
+\section{Results and Discussion}
+
+\subsection{Step response}
+
+The step response of the reference temperature sensor was shown in 
+Figure~\ref{fig:response}. The graph revealed the thermal time constant for
+the sensor was \SI{43.5}{\milli\second}. This was the time for the sensor to
+complete $1/e=63\%$ of the transition from it's initial to final value and was a
+measure of the speed of the sensor.
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/timestep_study.response}
+    \end{footnotesize}
+    \caption{Step response for the \ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor.}
+    \label{fig:response}
+\end{figure}
+
+
+\subsection{Stationary study}
+
+The $F$-value of a regression model gives the variance of the error in the full
+model vs a reduced model divided by the variance in the original model.For a
+given significance level, an $F$-test can be used to determine whether the
+regression model is a significantly better predictor than the reduced model.
+
+To assess the linearity of different characteristics, a linear and quadratic
+regression model were fitted to data between each pair of points. An $F$-test
+yielded a $p$-value for each model. This was used to find the largest region
+which was not significantly better explained by the quadratic model than the
+linear model at the 5\% level of significance.
+
+The gradient of the regression model in the linear region was used to determine
+the sensitivity for those sensors which exhibited a linear response. Outside of
+the linear region the sensitivity gradient was only valid for small signal
+approximations.
+
+Figure~\ref{fig:basic} contained the characteristic for the base
+\ce{Au}--\ce{Si3N4}--\ce{SiO2} temperature sensor with a support height
+$h=\SI{10}{\micro\meter}$ and a cantilever length $l=\SI{350}{\micro\meter}$.
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/material_study.2.linearity_C-T}
+        \vspace{-4em}
+        \include{tikz/material_study.2.linearity_dz-T}
+    \end{footnotesize}
+    \caption{Capacitance and vertical deflection plotted against temperature
+    for the \ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor.}
+    \label{fig:basic}
+\end{figure}
+
+The capacitance of the original sensor was not linear at the 5\% siginificance
+level, but at room temperature the sensitivity was
+\SI{1.3403}{\femto\farad\per\kelvin}
+
+On the other hand, the displacement characteristic was significantly linear:
+the line of best fit suggested the mechanical sensitivity of the
+multimorph was \SI{-0.3810}{\micro\meter\per\kelvin}. Extrapolating the
+line of best fit suggests the sensor was only capable of reaching \SI{46.2}
+{\celsius} before saturating, when the vertical displacement closed the air gap,
+potentially damaging a physical sensor.
+
+In general, the maximum temperature $T_{max}$ was described as follows:
+\begin{equation} \label{eq:T_max}
+    T_{max} = T_0 + \frac{h}{S_m}
+\end{equation}
+
+\subsection{Dimension study}
+
+The sensing range was extended by varying two dimensions.
+
+For a range of support heights, Figure~\ref{fig:h} showed the mechanical
+sensitivity was unchanged. Increasing the support height allowed the cantilever
+to deflect more before saturating, increasing temperature range. However,
+positioning the terminal further from ground allowed electric flux to leak from
+the system and lose electrical sensitivity.
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/support_height_study.linearity_dz-T}
+    \end{footnotesize}
+    \caption{Effect of support height $h$ on end deflection for the
+        \ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor. Gradient $S_m$}
+    \label{fig:h}
+\end{figure}
+
+In another study, the cantilever length was reduced. Figure~\ref{fig:l} revealed
+increasing $l$, decreased the magnitude of the gradient $S_m$. \eqref{eq:T_max},
+explains why the sensing range was extended.
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/beam_length_study.linearity_dz-T}
+    \end{footnotesize}
+    \caption{Effect of cantilever length $l$ on end deflection for the
+        \ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor. Gradient $S_m$}
+    \label{fig:l}
+\end{figure}
+
+However, the effects of $l$ and $h$ on electrical sensitivity were not ignored.
+For a parallel plate capacitor
+\begin{equation} \label{eq:C}
+    C = \frac{\epsilon lw}{h}
+\end{equation}
+
+This relationship was be distorted at large deflections,
+but the result implications were the same: capacitance bias and hence
+electrical sensitivity increased with cantilever length; capacitance bias
+and electrical sensitivity decreased with support height.
 
 \subsection{Material study}
 
-\begin{figure}[h]
-    \begin{footnotesize}
-        \include{tikz/material_study.C-T}
-    \end{footnotesize}
-    \caption{}
-    \label{fig:material_study.C-T}
-\end{figure}
+An alternative approach to increase mechanical sensitivity without affecting
+electrical sensitivity was to choose a materials with different coefficients of
+thermal expansion. The displacement characteristics of \ce{Al} and \ce{Ti} were
+compared in Figure~\ref{fig:material-S_m}. The high expansion coefficient of
+\ce{Al} determined the high sensitivity of the \ce{Al} sensor; conversely 
+the \ce{Ti} sensor was less sensitive than the reference sensor which used 
+\ce{Au}.
 
 \begin{figure}[h]
+    \centering
     \begin{footnotesize}
-        \include{tikz/material_study.C-dz}
+        \include{tikz/material_study.linearity_dz-T}
     \end{footnotesize}
-    \caption{}
-    \label{fig:material_study.C-T}
+    \caption{Effect of $\alpha$ on mechanical sensitivity for a 
+        metal--\ce{Si3N4}--\ce{SiO2} sensor. Gradient $S_m$}
+    \label{fig:material-S_m}
 \end{figure}
 
-\section{Analysis}
+However, unlike varying geometry, the electrical characteristic of each material
+chosen was the same. All the data points in Figure~\ref{fig:material-S_e}
+belonged to the same characteristic. Subsequently there exists two independent
+parameters which can be varied to produce a desired small signal sensitivity.
+\begin{equation}
+    S(\alpha,T) = S_m(\alpha)S_e(T)
+\end{equation}
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/material_study.linearity_C-dz}
+    \end{footnotesize}
+    \caption{Effect of $\alpha$ on electrical sensitivity for a
+        metal--\ce{Si3N4}--\ce{SiO2} sensor. Gradient $S_e$}
+    \label{fig:material-S_e}
+\end{figure}
+
+\subsection{Pre-stress study}
+
+None of the previous studies identified a method to improve the linearity of
+the $C$--$T$ characteristic.
+
+An auxillary sweep located the pre-stress which caused a \SI{100}{\micro\meter}
+displacement. This occurred at \SI{-0.87}{\giga\pascal}---compressive load.
+Figure~\ref{fig:pre-stress-disp} showed the displacement field.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{img/pre_stress_disp.png}
+    \caption{\ce{Au}--\ce{Si3N4}--\ce{SiO2} sensor displaced to
+        \SI{100}{\micro\meter} by a \SI{-0.87}{\giga\pascal} pre-stress.}
+    \label{fig:pre-stress-disp}
+\end{figure}
+
+Figure~\ref{fig:prestress.C-T} showed the characteristic at this pre-stress,
+which is linear at the 5\% significance level up to \SI{80}{\celsius}. The
+maximum temperature was extended to 
+
+\begin{figure}[h]
+    \centering
+    \begin{footnotesize}
+        \include{tikz/prestressed_characteristic_study.linearity_C-T}
+    \end{footnotesize}
+    \caption{Capacitance against temperature for the \ce{Au}--\ce{Si3N4}--
+        \ce{SiO2} sensor pre-stressed to \SI{100}{\micro\meter}.}
+    \label{fig:prestress.C-T}
+\end{figure}
+
+
 \section{Conclusion}
 
-% \printbibliography
+The multimorph capacitive temperature sensor detailed in this report can be
+characterised using the following: the thermal time constant was
+\SI{43.5}{\milli\second}, the $C$--$T$ characteristic is non-linear at
+the 5\% level, but does have a mechanically linear response. The mechanical
+sensitivity is \SI{-0.3810}{\micro\meter\per\kelvin} and the small-signal
+sensitivity is \SI{1.3403}{\femto\farad\per\kelvin} at room temperature. Finally
+the maximum temperature is \SI{46.2}{\celsius}. 
+
+There is an inherent trade-off between temperature range and mechanical
+sensitivity. Support height, cantilever length and material properties can be
+varied to select an appropriate small-signal sensitivity. However, electrical
+sensitivity can be always be increased by adding more cantilevers.
+
+Linearity and temperature range are best improved by pre-stressing the
+multimorph cantilever. The \SI{100}{\micro\meter} deflected sensor achieved a
+linear response up to \SI{80}{\celsius} and was operable at \SI{310}{\celsius}.
+However, this sensor had a much lower sensitivity at
+\SI{0.0657}{\femto\farad\per\kelvin}.
+
+\printbibliography
+\FloatBarrier
 
 \end{document}
